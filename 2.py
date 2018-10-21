@@ -34,19 +34,21 @@ for i in range(len(cnts)):
                 # print(x0, y0)
                 cntsJoin.append([x0, y0])
 
-print(cnts[0])
-print(cnts[1])
-
 cntsJoin1 = np.array([cntsJoin])
-print(cntsJoin1)
+#print(cntsJoin1)
 [x, y], [w, h], rate = cv2.minAreaRect(cntsJoin1)
 
 print(x, y, w, h, rate)
 
+if w > h:
+    rate += 90
+
+print(rate)
+
 if abs(rate) > 5:
     height, width = img.shape[:2]
 
-    degree = (90+rate)
+    degree = rate
     # 旋转后的尺寸
     heightNew = int(width * fabs(sin(radians(degree))) + height * fabs(cos(radians(degree))))
     widthNew = int(height * fabs(sin(radians(degree))) + width * fabs(cos(radians(degree))))
@@ -91,14 +93,10 @@ for i in range(len(cnts)):
                 # print(x0, y0)
                 cntsJoin.append([x0, y0])
 
-print(cnts[0])
-print(cnts[1])
-
 cntsJoin1 = np.array([cntsJoin])
-print(cntsJoin1)
+
 [x, y], [w, h], rate = cv2.minAreaRect(cntsJoin1)
 
-print(x, y, w, h, rate)
 
 
 copyImg2 = img.copy()
