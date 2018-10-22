@@ -1,5 +1,6 @@
 import os
 import cv2
+import pytesseract
 from PIL import Image
 import numpy as np
 
@@ -33,7 +34,13 @@ cv2.imwrite("temp1/3.jpg", dilation)
 # 查找边框  RETR_EXTERNAL外轮廓
 image, cnts, hierarchy = cv2.findContours(dilation, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-bitImg = cv2.bitwise_not(binary)
+
+# 直方图均衡化 增加对比度
+temp1Img = cv2.equalizeHist(gray)
+# 二值化
+ret, bitImg = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+
+cv2.imwrite("temp1/4.jpg", bitImg)
 
 for i in range(len(cnts)):
     # 只关注轮廓点数量超过5 的轮廓
@@ -59,7 +66,11 @@ for i in range(len(cnts)):
             tempImg = Util.rotate(bitImg,  box[1], box[2], box[3], box[0])
         else:
             tempImg = Util.rotate(bitImg, box[0], box[1], box[2], box[3])
-        cv2.imwrite("temp1/5_" + str(i) + ".jpg", tempImg)
+        cv2.imwrite("temp1/9_" + str(i) + ".jpg", tempImg)
+
+        text = pytesseract.image_to_string(tempImg, lang='num')
+        # 空格没有什么好方法，  或者先定位每个数字？
+        print('OCR识别结果：', text)
 
         #cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 1)
         # print(box)
@@ -68,7 +79,7 @@ for i in range(len(cnts)):
         # cv2.drawContours(img, cnts[i], -1, (0, 255, 0), 2)
 
 cv2.imshow("img2", img)
-cv2.imwrite("temp1/4.jpg", img)
+cv2.imwrite("temp1/5.jpg", img)
 
 
 # erosion = cv2.erode(dilation, element0, iterations=1)
