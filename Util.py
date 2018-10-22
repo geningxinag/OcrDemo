@@ -43,11 +43,6 @@ def warpAffine(img, degree):
 
 '''旋转图像并剪裁'''
 def rotate(img, pt1, pt2, pt3, pt4):
-    # pt1 = [pt1[0] - 3, pt1[1] - 3]
-    # pt2 = [pt2[0] + 3, pt2[1] - 3]
-    # pt3 = [pt3[0] + 3, pt3[1] + 3]
-    # pt4 = [pt4[0] - 3, pt4[1] + 3]
-
     print(pt1, pt2, pt3, pt4)
 
     withRect = math.sqrt((pt4[0] - pt1[0]) ** 2 + (pt4[1] - pt1[1]) ** 2)  # 矩形框的宽度
@@ -87,7 +82,14 @@ def rotate(img, pt1, pt2, pt3, pt4):
     if pt1[0] > pt3[0]:
         pt1[0], pt3[0] = pt3[0], pt1[0]
 
-    imgOut = imgRotation[int(pt2[1]):int(pt4[1]), int(pt1[0]):int(pt3[0])]
+
+    # [y1: y1 + h1, x1: x1 + w1]
+
+    #imgOut = cv2.imgRotation[int(pt2[1]):int(pt4[1]), int(pt1[0]):int(pt3[0])]
+
+    # 加一点位移 TODO 这个增加上下间距 应该是 参数传进来的  需要根据上下文判断
+
+    imgOut = imgRotation[int(pt2[1] - 2):int(pt4[1] + 2), int(pt1[0]):int(pt3[0])]
 
     return imgOut  # rotated image
 
