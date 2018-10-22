@@ -24,6 +24,9 @@ def handle(dir, filename):
     img = cv2.imread(dir + filename)
     cv2.imshow("orginImg", img)
 
+    if isDebug:
+        cv2.imwrite('temp1/1.jpg', img)
+
     width, height, pixels = img.shape
 
     # 查找红色条带区域
@@ -44,12 +47,15 @@ def handle(dir, filename):
         a = h
         h = w
         w = a
-
+    if isDebug:
+        cv2.imwrite('temp1/2.jpg', img)
     print('找到的红色条带轮廓：', filename, x, y, w, h, rate)
 
     # 截取 票内容区域
     contentImg = getTicketContentImg(img, x, y, h)
     cv2.imshow('contentImg', contentImg)
+    if isDebug:
+        cv2.imwrite('temp1/3.jpg', contentImg)
 
     return handerContent(contentImg)
 
@@ -61,10 +67,12 @@ def handerContent(contentImg):
     # 二值化
     ret, binary = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV)
 
-    element0 = cv2.getStructuringElement(cv2.MORPH_RECT, (9, 1))
+    element0 = cv2.getStructuringElement(cv2.MORPH_RECT, (18, 1))
     # 膨胀  为了找文字区域
     dilation = cv2.dilate(binary, element0, iterations=5)
     # cv2.imshow("dilation", dilation)
+    if isDebug:
+        cv2.imwrite('temp1/4.jpg', dilation)
 
     # 查找边框  RETR_EXTERNAL外轮廓
     image, cnts, hierarchy = cv2.findContours(dilation, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -73,7 +81,8 @@ def handerContent(contentImg):
     # 二值化
     ret, bitImg = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
 
-    cv2.imwrite("temp1/4.jpg", bitImg)
+    if isDebug:
+        cv2.imwrite("temp1/5.jpg", bitImg)
 
     for i in range(len(cnts)):
         # 只关注轮廓点数量超过5 的轮廓
@@ -82,8 +91,7 @@ def handerContent(contentImg):
             print(rect)
             [x, y], [w, h], rate = rect
 
-            if h < 5 or w < 5:
-                continue
+
 
             box = cv2.boxPoints(rect)
             box = np.int0(box)
@@ -91,30 +99,32 @@ def handerContent(contentImg):
             # TODO 怎么实现 根据轮廓 抠图
             cv2.drawContours(contentImg, [box], -1, (0, 255, 0), 1)
             print("#######   " + str(i) + "   ######")
+
+            if h < 5 or w < 5:
+                continue
             # 长、宽 反转    按轮廓切图
             if w < h:
                 tempImg = Util.rotate(bitImg, box[1], box[2], box[3], box[0])
             else:
                 tempImg = Util.rotate(bitImg, box[0], box[1], box[2], box[3])
-            cv2.imwrite("temp1/9_" + str(i) + ".jpg", tempImg)
 
-            text = pytesseract.image_to_string(tempImg, lang='num')
-            # 空格没有什么好方法，  或者先定位每个数字？
-            print('OCR识别结果：', text)
+            if isDebug:
+                cv2.imwrite("temp1/9_" + str(i) + ".jpg", tempImg)
 
-            # cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 1)
-            # print(box)
-            # print((box[1][0], box[1][1]), (box[3][0], int(box[3][1] + 10)))
-            # cv2.rectangle(img, (box[1][0], box[1][1]), (box[3][0], box[3][1]), (0, 255, 0), 1)
-            # cv2.drawContours(img, cnts[i], -1, (0, 255, 0), 2)
+            # text = pytesseract.image_to_string(tempImg, lang='num')
+            # # 空格没有什么好方法，  或者先定位每个数字？
+            # print('OCR识别结果：', text)
+
 
     cv2.imshow("img2", contentImg)
+    if isDebug:
+        cv2.imwrite("temp1/6.jpg", contentImg)
     return 0
 
 
 isDebug = True
 
-rootdir = 'D:/PycharmProjects/OcrDemo/1/'
+rootdir = 'D:/PycharmProjects/1/'
 
 # list = os.listdir(rootdir)  # 列出文件夹下所有的目录与文件
 # for i in range(0, len(list)):
@@ -123,7 +133,7 @@ rootdir = 'D:/PycharmProjects/OcrDemo/1/'
 #     handle(rootdir, list[i])
 
 
-handle(rootdir, '0.jpg')
+handle(rootdir, 'IMG_4264.JPG')
 
 cv2.waitKey()
 cv2.destroyAllWindows()
