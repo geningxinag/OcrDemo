@@ -12,9 +12,9 @@ global isDebug
 
 # 定位票信息内容区域     img 图片  红色条带的区域x, y, h
 def getTicketContentImg(img, x, y, h):
-    x1 = int(x - h * 480 / 680)
+    x1 = int(x - h * 470 / 680)
     y1 = int(y - h / 2 + h * 50 / 680)
-    w1 = int(h * 463 / 680)
+    w1 = int(h * 450 / 680)
     h1 = int(h - h * 80 / 680)
     return img[y1: y1 + h1, x1: x1 + w1];
 
@@ -111,9 +111,12 @@ def handerContent(contentImg):
             if isDebug:
                 cv2.imwrite("temp1/9_" + str(i) + ".jpg", tempImg)
 
-            # text = pytesseract.image_to_string(tempImg, lang='num')
-            # # 空格没有什么好方法，  或者先定位每个数字？
-            # print('OCR识别结果：', text)
+            try:
+                text = pytesseract.image_to_string(tempImg, lang='num')
+                # 空格没有什么好方法，  或者先定位每个数字？
+                print('OCR识别结果：', text)
+            except Exception as e:
+                print(e)
 
 
     cv2.imshow("img2", contentImg)
@@ -124,7 +127,7 @@ def handerContent(contentImg):
 
 isDebug = True
 
-rootdir = 'D:/PycharmProjects/1/'
+rootdir = '1/'
 
 # list = os.listdir(rootdir)  # 列出文件夹下所有的目录与文件
 # for i in range(0, len(list)):

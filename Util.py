@@ -43,11 +43,9 @@ def warpAffine(img, degree):
 
 '''旋转图像并剪裁'''
 def rotate(img, pt1, pt2, pt3, pt4):
-    print(pt1, pt2, pt3, pt4)
 
     withRect = math.sqrt((pt4[0] - pt1[0]) ** 2 + (pt4[1] - pt1[1]) ** 2)  # 矩形框的宽度
     heightRect = math.sqrt((pt1[0] - pt2[0]) ** 2 + (pt1[1] - pt2[1]) ** 2)
-    print(withRect, heightRect)
 
     angle = acos((pt4[0] - pt1[0]) / withRect) * (180 / math.pi)  # 矩形框旋转角度
     print(angle)
