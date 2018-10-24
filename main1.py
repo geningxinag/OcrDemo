@@ -16,7 +16,7 @@ def getTicketContentImg(img, x, y, h):
     y1 = int(y - h / 2 + h * 50 / 680)
     w1 = int(h * 450 / 680)
     h1 = int(h - h * 80 / 680)
-    return img[y1: y1 + h1, x1: x1 + w1];
+    return img[y1: y1 + h1, x1: x1 + w1]
 
 
 def handle(dir, filename):
