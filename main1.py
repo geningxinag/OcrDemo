@@ -97,7 +97,7 @@ def handerContent(contentImg):
             box = np.int0(box)
 
             # TODO 怎么实现 根据轮廓 抠图
-            cv2.drawContours(contentImg, [box], -1, (0, 255, 0), 1)
+
             print("#######   " + str(i) + "   ######")
 
             if h < 5 or w < 5:

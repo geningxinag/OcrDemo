@@ -9,9 +9,12 @@ from math import *
 def findRedArea(img):
     # 提取彩票中的 红色条带
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    lower_red = np.array([0, 100, 100])  # red
+    lower_red = np.array([0, 60, 60])  # red
     upper_red = np.array([10, 255, 255])
     red = cv2.inRange(hsv, lower_red, upper_red)
+
+    cv2.imshow("red", red)
+    cv2.imwrite("temp/red.jpg", red)
 
     # 查找边框  RETR_EXTERNAL外轮廓
     image, cnts, hierarchy = cv2.findContours(red, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
