@@ -10,12 +10,15 @@ def findRedArea(img):
     # 提取彩票中的 红色条带
 
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    lower_red = np.array([0, 40, 150])  # red
-    upper_red = np.array([10, 255, 255])
+
+    #cv2.imwrite("temp/2/hsv.jpg", hsv)
+
+    lower_red = np.array([0, 40, 160])  # red
+    upper_red = np.array([7, 255, 255])
     red = cv2.inRange(hsv, lower_red, upper_red)
 
-    # cv2.imshow("red", red)
-    # cv2.imwrite("temp/1.jpg", red)
+    #cv2.imshow("red", red)
+    #cv2.imwrite("temp/2/red.jpg", red)
     # 腐蚀
     element0 = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
     element1 = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
@@ -28,6 +31,8 @@ def findRedArea(img):
     dilation = cv2.dilate(erosion, element1, iterations=2)
     # cv2.imwrite("temp/3.jpg", dilation)
 
+    #cv2.imwrite("temp/2/red2.jpg", dilation)
+
     # 查找边框  RETR_EXTERNAL外轮廓
     image, cnts, hierarchy = cv2.findContours(dilation, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cntsJoin = []
@@ -35,12 +40,19 @@ def findRedArea(img):
     for i in range(len(cnts)):
         # 只关注轮廓点数量超过10 的轮廓
         if len(cnts[i]) > 50:
+            # acreage = cv2.contourArea(cnts[i], False)
+            # [x, y], [w, h], rate = cv2.minAreaRect(cnts[i])
+            # print(acreage, w*h)
+            # if acreage > w * h * 0.75:
+
             for j in range(len(cnts[i])):
                 for k in range(len(cnts[i][j])):
                     (x0, y0) = cnts[i][j][k]
                     # print(x0, y0)
                     cntsJoin.append([x0, y0])
-
+    #print(cntsJoin)
+    #cv2.drawContours(img, np.array([cntsJoin]), -1, (0, 255, 0), 2)
+    #cv2.imwrite("temp/2/red3.jpg", img)
     return cv2.minAreaRect(np.array([cntsJoin]))
 
 

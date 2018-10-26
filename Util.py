@@ -14,7 +14,7 @@ def findRedArea(img):
     red = cv2.inRange(hsv, lower_red, upper_red)
 
     cv2.imshow("red", red)
-    cv2.imwrite("temp/red.jpg", red)
+    cv2.imwrite("temp/2/red.jpg", red)
 
     # 查找边框  RETR_EXTERNAL外轮廓
     image, cnts, hierarchy = cv2.findContours(red, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -90,7 +90,7 @@ def rotate(img, pt1, pt2, pt3, pt4):
 
     # 加一点位移 TODO 这个增加上下间距 应该是 参数传进来的  需要根据上下文判断
 
-    imgOut = imgRotation[int(pt2[1] - 2):int(pt4[1] + 2), int(pt1[0]):int(pt3[0])]
+    imgOut = imgRotation[int(pt2[1] - 0):int(pt4[1] + 0), int(pt1[0]):int(pt3[0])]
 
     return imgOut  # rotated image
 

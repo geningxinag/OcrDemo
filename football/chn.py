@@ -9,7 +9,7 @@ from math import *
 
 # https://www.cnblogs.com/interdrp/p/5818770.html
 
-tempImg = cv2.imread("D:/PycharmProjects/OcrDemo/football/temp/1/80.jpg")
+tempImg = cv2.imread("temp/1/59.jpg")
 
 cv2.imshow('tempImg', tempImg)
 
